@@ -1,29 +1,65 @@
+import React, { Component } from 'react'
 import './App.css';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
+import Plan from './Plan'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src="Octocat.png" className="App-logo" alt="logo" />
-        <p>
-          GitHub Codespaces <span className="heart">♥️</span> React
-        </p>
-        <p className="small">
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </p>
-      </header>
-    </div>
-  );
+
+class App extends Component {
+  state = {
+    items: [],
+    text: "",
+  }
+  handleChange = (e) => {
+    this.setState({ text: e.target.value })
+  }
+  handleAdd = (e) => {
+    if ( this.state.text !== "") {
+      const items = [...this.state.items, this.state.text];
+      this.setState({items: items, text: ""});
+    }
+  }
+
+  handleDelete = (id) => {
+    console.log("Deleted", id);
+    const Olditems = [...this.state.items]
+    console.log("Olditems", Olditems);
+    const items = Olditems.filter((element, i) => {
+      return i !== id
+    })
+     console.log("Newitems", items);
+     this.setState({items: items})
+  }
+  render() {
+    return (
+      <div className="conatiner-fluid my-5">
+        <div className="row">
+          <div className="col-sm-6 mx-auto shadow-lg">
+            <h2 className="text-center">Todays Plan</h2>
+            <div className="row">
+              <div className="col-9">
+                 <input type="text" className="form-control" placeholder="Write Your Plan Here" value={this.state.text} onChange={this.handleChange} />
+              
+              </div>
+              <div className="col-2">
+                <button type="button" className="btn btn-warning px-5 fw-bold" onClick={this.handleAdd}>Add</button>
+              </div>
+              <div className="container-fluid">
+                 <ul className="list-unstyled row m-5">
+                   {
+                     this.state.items.map((value, i)=>{
+                      return <Plan key={i} id={i} value={value} sendData={this.handleDelete} />
+                     })
+
+                   }
+                   
+                 </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
